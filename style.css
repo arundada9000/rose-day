@@ -40,55 +40,71 @@ body {
     filter: drop-shadow(0 0 15px rgba(255, 51, 102, 0.2));
 }
 
-#rose-svg {
+#main-svg {
     width: 100%;
     height: 100%;
     animation: float 6s ease-in-out infinite;
 }
 
-/* Animate the individual paths of the new SVG */
-#rose-svg path {
+/* Visibility classes for SVG Groups */
+.hidden-flower {
+    display: none;
+}
+
+/* Animate the ROSE paths */
+/* Delayed start to sync with Poetic Intro (starts ~5.5s) */
+#rose-group path {
     opacity: 0;
     transform-origin: center bottom;
     animation: bloom 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Stagger animations for a "building" effect */
-#rose-svg path:nth-child(1) {
-    animation-delay: 0.2s;
+#rose-group path:nth-child(1) {
+    animation-delay: 5.5s;
 }
 
-/* stem/leaves */
-#rose-svg path:nth-child(2) {
-    animation-delay: 0.4s;
+#rose-group path:nth-child(2) {
+    animation-delay: 5.7s;
 }
 
-#rose-svg path:nth-child(3) {
-    animation-delay: 0.8s;
+#rose-group path:nth-child(3) {
+    animation-delay: 6.1s;
 }
 
-/* petals start */
-#rose-svg path:nth-child(4) {
-    animation-delay: 1.0s;
+#rose-group path:nth-child(4) {
+    animation-delay: 6.3s;
 }
 
-#rose-svg path:nth-child(5) {
-    animation-delay: 1.2s;
+#rose-group path:nth-child(5) {
+    animation-delay: 6.5s;
 }
 
-#rose-svg path:nth-child(6) {
-    animation-delay: 1.4s;
+#rose-group path:nth-child(6) {
+    animation-delay: 6.7s;
 }
 
-#rose-svg path:nth-child(7) {
-    animation-delay: 1.6s;
+#rose-group path:nth-child(7) {
+    animation-delay: 6.9s;
 }
 
-#rose-svg path:nth-child(8) {
-    animation-delay: 1.8s;
+#rose-group path:nth-child(8) {
+    animation-delay: 7.1s;
 }
 
-/* top petals */
+/* Animate TULIP & SUNFLOWER (Nested Target)
+   The parent group (.flower-fade-in) has the positioning transform (scale/translate).
+   The child group (.flower-bloom-target) gets the bloom animation.
+*/
+.flower-bloom-target {
+    transform-origin: center;
+    transform-box: fill-box;
+    /* Important for SVG local centering */
+    opacity: 0;
+}
+
+.flower-fade-in .flower-bloom-target {
+    animation: simpleFade 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
 
 @keyframes bloom {
     from {
@@ -99,6 +115,18 @@ body {
     to {
         opacity: 1;
         transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes simpleFade {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
@@ -114,16 +142,50 @@ body {
     }
 }
 
-/* --- Typography --- */
+/* Question Pop-in Animation */
+.pop-in {
+    animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    opacity: 1 !important;
+    /* Force visible */
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* --- Typography & Poetic Intro --- */
 h1 {
     font-family: 'Dancing Script', cursive;
     color: var(--text-color);
     font-size: 3rem;
     margin: 1rem 0;
-    opacity: 0;
-    animation: fadeIn 2s forwards 2.5s;
-    /* Wait for bloom */
     text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.poetic-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: var(--dark-red);
+    position: absolute;
+    /* Overlay to prevent layout shift */
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    /* Let clicks pass through if needed */
+    opacity: 0;
+    transition: opacity 1s;
+    z-index: 20;
 }
 
 p {
@@ -182,6 +244,48 @@ button {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     transition: all 0.3s ease;
+}
+
+/* --- Choice Modal Styles --- */
+#choice-modal {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.choice-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.choice-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.choice-btn:hover {
+    background: #fff0f5;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 #confetti {
